@@ -1,54 +1,32 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+    Setup file for pyyacp.
 
-"""The setup script."""
+    This file was generated with PyScaffold 3.0.3.
+    PyScaffold helps you to put up the scaffold of your new Python project.
+    Learn more under: http://pyscaffold.org/
+"""
 
-from setuptools import setup, find_packages
+import sys
+from setuptools import setup
 
-with open('README.rst') as readme_file:
-    readme = readme_file.read()
+# Add here console scripts and other entry points in ini-style format
+entry_points = """
+[console_scripts]
+# script_name = pyyacp.module:function
+# For example:
+pyyacp = pyyacp.cli:cli
+"""
 
-with open('HISTORY.rst') as history_file:
-    history = history_file.read()
 
-requirements = ['Click>=6.0', ]
+def setup_package():
+    needs_sphinx = {'build_sphinx', 'upload_docs'}.intersection(sys.argv)
+    sphinx = ['sphinx'] if needs_sphinx else []
+    setup(setup_requires=['pyscaffold>=3.0a0,<3.1a0'] + sphinx,
+          entry_points=entry_points,
+          use_pyscaffold=True)
 
-setup_requirements = [ ]
 
-test_requirements = [ ]
-
-setup(
-    author="Juergen Umbrich",
-    author_email='jueumb@gmail.com',
-    classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Natural Language :: English',
-        "Programming Language :: Python :: 2",
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-    ],
-    description="Generate a pattern represenation for a set of values",
-    entry_points={
-        'console_scripts': [
-            'pyyacp=pyyacp.cli:cli',
-        ],
-    },
-    install_requires=requirements,
-    license="MIT license",
-    long_description=readme + '\n\n' + history,
-    include_package_data=True,
-    keywords='pyyacp',
-    name='pyyacp',
-    packages=find_packages(include=['pyyacp']),
-    setup_requires=setup_requirements,
-    test_suite='tests',
-    tests_require=test_requirements,
-    url='https://github.com/jumbrich/pyyacp',
-    version='0.1.0',
-    zip_safe=False,
-)
+if __name__ == "__main__":
+    setup_package()
