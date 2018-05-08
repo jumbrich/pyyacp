@@ -91,9 +91,10 @@ def clean(file, url):
 @click.option('-f','--file',  help='File', cls=NotRequiredIf, not_required_if='url')
 @click.option('-u','--url',  help='URL'  , cls=NotRequiredIf, not_required_if='file')
 @click.option('--html',  help='html representation',type=click.Path(resolve_path=True))
-@click.option('-l',  help='try to open html file',count=True)
+@click.option('-l','--load',  help='try to open/load html file',count=True)
+@click.option('-s','--sample',  help='sample rows',type=int, default=None)
 
-def profile(file, url, html, l):
+def profile(file, url, html, load, sample):
     """Console script for pyyacp."""
 
     structure_detector = AdvanceStructureDetector()
@@ -116,11 +117,12 @@ def profile(file, url, html, l):
 
     apply_profilers(table)
 
+
     if html:
         click.echo("Writing HTML representation to {}".format(click.format_filename(html)))
         with open(html, "w") as f:
-            f.write(to_html_string(table))
-        if l:
+            f.write(to_html_string(table,sample=sample))
+        if open:
             click.launch(html)
     else:
         table.print_summary()
