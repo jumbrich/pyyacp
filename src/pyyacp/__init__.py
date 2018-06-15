@@ -6,7 +6,7 @@ try:
     dist_name = __name__
     __version__ = get_distribution(dist_name).version
 except DistributionNotFound:
-    __version__ = '0.1.2'
+    __version__ = '0.2'
 
 
 #!/usr/bin/python

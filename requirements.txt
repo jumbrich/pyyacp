@@ -4,4 +4,11 @@
 # numpy==1.13.3
 # scipy==1.0
 pyanycsv-0.3
+click
+dtpattern
+jinja2
+structlog
+faker
+pandas
+numpy
 
