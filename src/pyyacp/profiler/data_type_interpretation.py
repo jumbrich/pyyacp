@@ -27,8 +27,8 @@ class DataTypeInterpretation(ColumnProfiler):
         data_type=meta['data_type']
         #print meta
         min, mean, max = meta['stats_max_len'], meta['stats_mean_len'], meta['stats_min_len']
-        fixed_len = min==max
-        unique= meta['stats_distinct'] + meta['stats_empty'] == meta['stats_num_rows']
+        fixed_len = min ==max
+        unique = meta['stats_distinct'] + meta['stats_empty'] == meta['stats_num_rows']
 
         if data_type==DATETIME:
             return data_type.upper()

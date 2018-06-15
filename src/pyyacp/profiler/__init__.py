@@ -2,14 +2,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import functools
-
 import structlog
 
-from dtpattern import dtpattern1
-from dtpattern.dtpattern1 import aggregate_patterns, pattern_comparator, translate
 from pyyacp.profiler.empty_cell_detection import is_not_empty
-from pyyacp.timer import Timer, timer
 
 log = structlog.get_logger()
 
@@ -87,32 +82,6 @@ class ColumnByCellProfiler(Profiler):
 
     def accept(self, cell):
         pass
-
-
-class ColumnPatternProfiler(ColumnProfiler,ColumnByCellProfiler):
-
-    def __init__(self, num_patterns=3):
-        super(ColumnPatternProfiler, self).__init__('cpp','patterns')
-        self.num_patterns=num_patterns
-        self.patterns=[]
-        self.pa = self.patterns.append
-
-    @timer(key="cpp_column")
-    def profile_column(self, column, meta):
-        return dtpattern.aggregate(filter(is_not_empty,column), size=self.num_patterns)
-
-    @timer(key="cpp_result")
-    def result(self):
-        p = sorted(self.patterns, key=functools.cmp_to_key(pattern_comparator))
-        #empty
-        #reset in case there is another column
-        self.patterns = []
-        self.pa = self.patterns.append
-        return aggregate_patterns(p, size=self.num_patterns)
-
-    def accept(self, cell):
-        if is_not_empty(cell):
-            self.pa(translate(cell))
 
 
 class ColumnRegexProfiler(Profiler):

@@ -172,8 +172,9 @@ class AdvanceStructureDetector(object):
                 most = max(list(map(array.count, array)))
                 return list(set(filter(lambda x: array.count(x) == most, array)))
 
-            #print(guessed_col_header)
-            mc = _most_common_oneliner(guessed_col_header)
+            #TODO
+            #This needs a log of thought and debugging
+            mc = _most_common_oneliner([x for x in guessed_col_header if x>=0])
             if guessed_col_header.count(mc)==1:
                 #hmm the most common appears only once,
                 # lets check the minimum,
@@ -204,7 +205,7 @@ class AdvanceStructureDetector(object):
 def _most_common_oneliner(L):
     return max(itertools.groupby(sorted(L)),
                key=lambda x_v: (len(list(x_v[1])), -L.index(x_v[0]))
-               )[0] if len(L) > 0 else None
+               )[0] if len(L) > 0 else 0
 
 
 def guess_description_lines(sample):
