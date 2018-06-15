@@ -16,7 +16,7 @@ entry_points = """
 [console_scripts]
 # script_name = pyyacp.module:function
 # For example:
-pyyacp = pyyacp.cli:cli
+# fibonacci = pyyacp.skeleton:run
 """
 
 
