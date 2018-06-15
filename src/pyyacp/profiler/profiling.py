@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+from pyyacp.profiler.colum_pattern_profiler import ColumnPatternProfiler
 from pyyacp.timer import timer, Timer
 
-from pyyacp.profiler import  ColumnPatternProfiler, ColumnProfilerSet, ColumnByCellProfilerSet
+from pyyacp.profiler import  ColumnProfilerSet, ColumnByCellProfilerSet
 from pyyacp.profiler.column_stats_profiler import ColumnStatsProfiler
 from pyyacp.profiler.data_type_detection import DataTypeDetection
 from pyyacp.profiler.data_type_interpretation import DataTypeInterpretation

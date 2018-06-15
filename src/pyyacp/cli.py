@@ -122,7 +122,7 @@ def profile(file, url, html, load, sample):
         click.echo("Writing HTML representation to {}".format(click.format_filename(html)))
         with open(html, "w") as f:
             f.write(to_html_string(table,sample=sample))
-        if open:
+        if load:
             click.launch(html)
     else:
         table.print_summary()

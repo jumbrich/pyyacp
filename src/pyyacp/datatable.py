@@ -202,6 +202,13 @@ class DataTable(object):
 
         self.column_metadata={i:{}for i in range(0,len(self.columnIDs))}
 
+        ### make sure that we do not have duplicate column names
+        newlist = []
+        for i, v in enumerate(self.columnIDs):
+            totalcount = self.columnIDs.count(v)
+            count = self.columnIDs[:i].count(v)
+            newlist.append(v + str(count + 1) if totalcount > 1 else v)
+        self.columnIDs=newlist
         self.data=pd.DataFrame(columns=self.columnIDs)
 
     def table_structure(self):
@@ -284,7 +291,6 @@ class DataTable(object):
                 c+=1
         if header:
             for header in self.header_rows:
-                print([type(h) for h in header])
                 w.writerow([str(h) for h in header])
                 c += 1
         for row in self.rowIter():
