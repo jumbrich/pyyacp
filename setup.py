@@ -17,6 +17,7 @@ entry_points = """
 # script_name = pyyacp.module:function
 # For example:
 # fibonacci = pyyacp.skeleton:run
+yacp = pyyacp.cli:cli
 """
 
 
@@ -30,3 +31,5 @@ def setup_package():
 
 if __name__ == "__main__":
     setup_package()
+
+
