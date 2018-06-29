@@ -7,7 +7,7 @@ from collections import defaultdict
 from itertools import chain, combinations
 
 from pyyacp.profiler import TableProfiler
-from pyyacp.timer import Timer, timer
+from pyjuhelpers.timer import timer
 
 __author__ = 'nina'
 
@@ -16,11 +16,16 @@ class FDProfiler(TableProfiler):
     def __init__(self):
         super(FDProfiler, self).__init__('tane','table_tane')
 
-    @timer(key='fd_table')
-    def profile_table(self, datatable):
+    def result_datatype(self):
+        return list
+
+
+    @timer(key='profile.fd_table')
+    def _profile_table(self, datatable):
         fd = TANEAlgorithm()
         stats= fd.process(datatable)
-        datatable.meta[self.key]=stats
+        return stats
+
 
 
 class TANEAlgorithm(object):
@@ -47,6 +52,9 @@ class TANEAlgorithm(object):
         return self.analyse_cols(data_table.columns())
 
     def analyse_cols(self, columns):
+        self.no_cols= len(columns)
+
+        stop_at_level = 5
         self.cols=columns
         self.checks = 0
         t0 = time.clock()
@@ -60,7 +68,7 @@ class TANEAlgorithm(object):
         self.L[1] = set([x for x in self.R.split('_')])
         l = 1
 
-        while self.L[l] != set([]):
+        while self.L[l] != set([]) and l<stop_at_level:
             self.compute_dependencies(l)
             self.prune(l)
             self.L[l+1] = self.generate_next_level(l)
@@ -82,11 +90,8 @@ class TANEAlgorithm(object):
 
 
     def getRelations(self, cols):
-        relations = []
-        for i in range(len(cols)):
-            relations.append(str(i))
+        relations = [str(i) for i in range(len(cols))]
         return '_'.join(relations)
-
 
     def compute_dependencies(self, l):
         level = self.L[l]

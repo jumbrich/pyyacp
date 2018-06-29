@@ -5,8 +5,15 @@
 # numpy==1.13.3
 # scipy==1.0
 
+click
 dtpattern
 pyanycsv
-struclog
 pandas
 numpy
+structlog
+requests
+cchardet
+markupsafe
+pyjuhelpers
+jinja2
+dateutil

@@ -2,21 +2,22 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from dtpattern.dtpattern1 import translate_all, l1_aggregate, l2_aggregate, patterns_to_unique_symbols
+
+
+from dtpattern.dtpattern1 import translate_all
 from pyyacp.profiler import ColumnProfiler
-from pyyacp.profiler.data_type_detection import DATETIME, INT, UNICODE
+from pyjuhelpers.timer import timer
 
-import re
-SENT=re.compile('^(C[c])+( [Cc]+)*[\.!?]?$')
-ENT=re.compile('^(C[c])+( [Cc]+){2,3}$')
-
-class CSetDetection(ColumnProfiler):
+class CharacterSetProfiler(ColumnProfiler):
 
     def __init__(self):
-        super(CSetDetection, self).__init__('cset','cset')
+        super(CharacterSetProfiler, self).__init__('cset', 'cset')
 
+    def result_datatype(self):
+        return str
 
-    def profile_column(self, column, meta):
+    @timer(key="profile.col_cset")
+    def _profile_column(self, column, meta):
 
         return self._analyse_ColumnPattern(column, meta)
 
@@ -28,8 +29,6 @@ class CSetDetection(ColumnProfiler):
         for p in patterns:
             s=set(p)
             res.update(s)
-
-
 
         return ''.join(sorted(list(set(res))))
 

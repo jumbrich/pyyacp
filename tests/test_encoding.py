@@ -2,16 +2,16 @@
 import codecs
 import unittest
 
-from pyyacp.pyyacp import YACParser
+
 
 
 def generate_csv(encoding):
-    print "e",encoding
+
     data=u'ä,ö,ê\na,b,c'
 
     if encoding!='utf8':
         data=data.encode(encoding, errors='replace')
-    print data
+    print(data)
     return data
 
 
