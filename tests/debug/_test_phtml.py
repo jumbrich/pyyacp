@@ -6,17 +6,15 @@ import sys
 
 from pyyacp.html.to_html import to_html
 import  pyyacp.datatable as datatable
-from pyyacp.profiler import ColumnRegexProfiler, ColumnByCellProfilerSet, \
-    ColumnProfiler, ColumnProfilerSet
+from pyyacp.profiler import ColumnByCellProfilerSet, \
+    ColumnProfilerSet
 from pyyacp.profiler.colum_pattern_profiler import ColumnPatternProfiler
 from profiler.profiling import apply_profilers
 
 from pyyacp.profiler.column_stats_profiler import ColumnStatsProfiler
 from pyyacp.profiler.data_type_detection import DataTypeDetection
-from pyyacp.profiler.data_type_interpretation import DataTypeInterpretation
+from pyyacp.profiler.datatype_interpretation import DataTypeInterpretation
 from pyyacp.profiler.distributions import CharacterDistributionProfiler, BenfordsLawDistribution
-from pyyacp.profiler.fdprofiler import FDProfiler
-from pyyacp.profiler.xsd11_type_detection import XSDTypeDetection
 from pyyacp.table_structure_helper import AdvanceStructureDetector
 from pyyacp.testing.csv_iterator import csvContent_iter
 

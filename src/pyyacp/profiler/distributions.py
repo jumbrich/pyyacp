@@ -2,39 +2,38 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import collections
 import math
 import numpy as np
 
 from collections import defaultdict
 
-from pyyacp.profiler import ColumnProfiler, ColumnByCellProfiler
+from pyyacp.profiler import ColumnProfiler
 from pyyacp.profiler import is_not_empty
-from pyyacp.profiler.data_type_detection import FLOAT, UNICODE
+from pyyacp.profiler.data_type_detection import FLOAT, UNICODE, DataTypeDetection
 from pyyacp.profiler.data_type_detection import INT
-from pyyacp.timer import timer
+from pyjuhelpers.timer import timer
 
 
-class CharacterDistributionProfiler(ColumnProfiler,ColumnByCellProfiler):
+CharacterDistributionProfilerResult = collections.namedtuple('CharacterDistributionProfilerResult',
+                                                  ['dist'
+                                                   ])
+CharacterDistributionProfilerResult.__new__.__defaults__ = (None,) * len(CharacterDistributionProfilerResult._fields)
+class CharacterDistributionProfiler(ColumnProfiler):
 
     def __init__(self):
         super(CharacterDistributionProfiler, self).__init__('cdp', 'c_dist')
         self.dv = defaultdict(int)
 
-    @timer(key='cdp_column')
-    def profile_column(self, column, meta):
-        return self._profile_column(column, meta)
 
-    def result(self):
-        return self._compile_stats()
+    def result_datatype(self):
+        return CharacterDistributionProfilerResult()
 
-    def accept(self, cell):
-        if is_not_empty(cell):
-            for c in cell:
-                self.dv[c] += 1
-
-        #self.values.append(cell)
-
+    @timer(key="profile.col_char_distr")
     def _profile_column(self, values, meta):
+        if 'data_type' not in meta:
+            DataTypeDetection().profile_column(values, meta)
+
         data_type = meta['data_type']
         if data_type == UNICODE:
             for v in filter(is_not_empty,values):
@@ -44,9 +43,9 @@ class CharacterDistributionProfiler(ColumnProfiler,ColumnByCellProfiler):
 
     def _compile_stats(self):
         if len(self.dv)>0:
-            return {'dist':dict(self.dv)}
+            return CharacterDistributionProfilerResult(**{'dist': dict(self.dv)})
         else:
-            return {'dist': None}
+            return CharacterDistributionProfilerResult()
 
 def benford_law():
     return [math.log10(1 + 1 / float(i)) * 100.0 for i in range(1, 10)]
@@ -74,28 +73,30 @@ def passChi(chi):
 def getExpectedBenfordCount(size):
 	return list(map(lambda x:x*0.01*size, benford_law()))
 
-class BenfordsLawDistribution(ColumnProfiler, ColumnByCellProfiler):
+
+
+
+BenfordsLawDistributionResult = collections.namedtuple('BenfordsLawDistributionResult',
+                                                  ['dist', 'follows', 'chi'])
+
+
+class BenfordsLawDistribution(ColumnProfiler):
 
     def __init__(self):
         super(BenfordsLawDistribution, self).__init__('cdb', 'benford')
         self.dv = {i:0 for i in range(1,10)}
 
-    @timer(key='cdb_column')
-    def profile_column(self, column, meta):
-        return self._profile_column(column, meta)
+    def result_datatype(self):
+        return BenfordsLawDistributionResult(None, False, None)
 
-    def result(self):
-        return self._compile_stats()
-
-    def accept(self, cell):
-        digit=get_leading_number(cell)
-        if digit != 0:
-            self.dv[digit] +=1
-
+    @timer(key="profile.col_benford_distr")
     def _profile_column(self, values, meta):
+
+        if 'data_type' not in meta:
+            DataTypeDetection().profile_column(values, meta)
         data_type = meta['data_type']
         if data_type == INT or data_type == FLOAT:
-            x = map(get_leading_number, values)
+            x = list(map(get_leading_number, values))
             for k in range(1, 10):
                 self.dv[k] = x.count(k)
         return self._compile_stats()
@@ -112,9 +113,9 @@ class BenfordsLawDistribution(ColumnProfiler, ColumnByCellProfiler):
             for k,v in self.dv.items():
                 dd[k]=v/(total)
 
-            return {'dist': dd, 'is':passChi(chi), 'chi':chi}
+            return BenfordsLawDistributionResult(**{'dist': dd, 'follows':passChi(chi), 'chi':chi})
         else:
-            return {'dist': None, 'is': False, 'chi': None}
+            return BenfordsLawDistributionResult(**{'dist': None, 'follows': False, 'chi': None})
 
 #
 #

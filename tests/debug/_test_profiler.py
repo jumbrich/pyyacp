@@ -6,18 +6,28 @@ import sys
 
 import  pyyacp.datatable as datatable
 from pyyacp import YACParser
-from pyyacp.profiler.profiling import apply_profilers
 from pyyacp.table_structure_helper import AdvanceStructureDetector
 
 from pyyacp.profiler.fdprofiler import FDProfiler
 from pyyacp.profiler import ColumnProfilerSet, ColumnByCellProfilerSet
+from pyyacp.profiler.profiling import apply_profilers
 from pyyacp.profiler.colum_pattern_profiler import ColumnPatternProfiler
 from pyyacp.profiler.column_stats_profiler import ColumnStatsProfiler
 from pyyacp.profiler.data_type_detection import DataTypeDetection
-from pyyacp.profiler.cset_detection import CSetDetection
-from pyyacp.profiler.data_type_interpretation import DataTypeInterpretation
+from pyyacp.profiler.cset_detection import CharacterSetProfiler
+from pyyacp.profiler.datatype_interpretation import DataTypeInterpretation
 from pyyacp.profiler.distributions import CharacterDistributionProfiler, BenfordsLawDistribution
 from pyyacp.table_structure_helper import AdvanceStructureDetector
+
+
+
+
+
+
+
+
+
+
 
 
 structure_detector=AdvanceStructureDetector
@@ -25,7 +35,7 @@ structure_detector=AdvanceStructureDetector
 
 default_profilers = [FDProfiler, ColumnByCellProfilerSet(
             [ColumnPatternProfiler, ColumnStatsProfiler, CharacterDistributionProfiler, BenfordsLawDistribution]),
-                             ColumnProfilerSet([DataTypeDetection, DataTypeInterpretation,CSetDetection])]
+                     ColumnProfilerSet([DataTypeDetection, DataTypeInterpretation, CharacterSetProfiler])]
 
 
 

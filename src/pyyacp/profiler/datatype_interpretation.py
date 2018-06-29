@@ -3,27 +3,40 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from pyyacp.profiler import ColumnProfiler
-from pyyacp.profiler.data_type_detection import DATETIME, INT, UNICODE
+from pyyacp.profiler.colum_pattern_profiler import ColumnPatternProfiler
+from pyyacp.profiler.column_stats_profiler import ColumnStatsProfiler
 
 import re
+
+from pyyacp.profiler.data_type_detection import DataTypeDetection
+
 SENT=re.compile('^(C[c])+( [Cc]+)*[\.!?]?$')
 ENT=re.compile('^(C[c])+( [Cc]+){2,3}$')
+
+from pyjuhelpers.timer import timer
 
 class DataTypeInterpretation(ColumnProfiler):
 
     def __init__(self):
         super(DataTypeInterpretation, self).__init__('dclass','data_class')
-        self.values=[]
 
-    def profile_column(self, column, meta):
-        data_class = 'UNDEF'
-        if 'patterns' in meta and 'stats_max_len' in meta:
-            return  self._analyse_ColumnPattern(column,meta)
+    def result_datatype(self):
+        return str
 
-        return data_class
+    @timer(key="profile.col_dclass")
+    def _profile_column(self, column, meta):
+        if 'pattern' not in meta:
+            ColumnPatternProfiler().profile_column(column, meta)
+        if 'stats_max_len' not in meta:
+            ColumnStatsProfiler().profile_column(column, meta)
+        if 'data_type' not in meta:
+            DataTypeDetection().profile_column(column, meta)
+
+        return self._analyse_ColumnPattern(column,meta)
 
     def _analyse_ColumnPattern(self, column,meta):
-        patterns= meta['patterns']
+        from pyyacp.profiler.data_type_detection import DATETIME, INT, UNICODE
+        patterns = meta['pattern']
         data_type=meta['data_type']
         #print meta
         min, mean, max = meta['stats_max_len'], meta['stats_mean_len'], meta['stats_min_len']
@@ -40,10 +53,10 @@ class DataTypeInterpretation(ColumnProfiler):
         if data_type == INT:
             s+='NUM'
         elif data_type == UNICODE:
-            if len(patterns)==1:
-                if SENT.match(patterns[0][0]):
+            if patterns:
+                if SENT.match(patterns):
                     s+='SENTENCE'
-                elif ENT.match(patterns[0][0]):
+                elif ENT.match(patterns):
                     s += 'ENTITY'
                 else:
                     s += 'UNI'

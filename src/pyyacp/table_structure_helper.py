@@ -5,6 +5,9 @@ import itertools
 
 from pyyacp.profiler import simple_type_detection
 from dtpattern import dtpattern1
+
+from pyjuhelpers.timer import timer
+
 DESCRIPTION_CONFIDENCE = 10
 
 import structlog
@@ -34,7 +37,9 @@ digits=set(['1','0'])
 class AdvanceStructureDetector(object):
 
     # i would include emtpy lines for now
+    @timer()
     def guess_description_lines(self, sample):
+
         r_len = [len(row) for row in sample]
         grouped_L = [(k, sum(1 for i in g)) for k, g in itertools.groupby(r_len)]
         est_colNo = _most_common_oneliner(r_len)
@@ -139,6 +144,7 @@ class AdvanceStructureDetector(object):
             return header_rows
 
     # allow multple header lines if existing
+    @timer()
     def guess_headers(self, sample, verbose=False):
         descriptionLines = self.guess_description_lines(sample)
         #skip description lines

@@ -22,11 +22,6 @@ def detect_empty_cell( values ):
     patterns=translate_all(values)
     L2= l2_aggregate(grouped=l1_aggregate(patterns=patterns))
     s_p =l3_shared_groups(L2)
-    #print l
-    #print L2
-    #for k in L2:
-    #    print k[0]
-    #print s_p
 
 
     results=[]
