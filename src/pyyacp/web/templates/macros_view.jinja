@@ -111,7 +111,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for k in ['data_type','data_class','patterns','cset', 'stats_mode','stats_num_rows','stats_distinct','stats_empty', 'stats_min_value','stats_max_value'] %}
+                {% for k in ['data_type','data_class','pattern','cset', 'stats_mode','stats_num_rows','stats_distinct','stats_empty', 'stats_min_value','stats_max_value'] %}
                     <tr class="right aligned">
                         <td>{{k | replace('stats_', '')}}</td>
                         {% for i in range(0, profiledata.table_metadata.column_names| length,1 ) %}

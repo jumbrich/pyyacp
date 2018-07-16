@@ -17,15 +17,13 @@ UNICODE='unicode'
 
 import re
 types=[
-    (FLOAT,re.compile('^\[?[+/-]*\]?\d+\.\d*$')),
-    (INT,re.compile('^\[?[+/-]*\]?\d+$')),
-    (DATETIME, re.compile('^\d{4}-\d{2}-\d{2}([C ]+\d{2}:\d{2}:\d{2})$')),
-    (DATE, re.compile('^\d{4}-\d{2}-\d{2}$')), #1111-11-11
-    (DATE, re.compile('^\d{4}/\d{2}/\d{2}$')), #1111/11/11
-    (DATE, re.compile('^\d{2}/\d{2}/\d{4}$')),#11/11/1111
-
-    (TIME, re.compile('^\d{2}:\d{2}(:\d{2})?$')) #1111-11-11
+    (FLOAT,re.compile('^(\((S(m)?|P(d)?)\)#\d* |(S(m)? )|(P(d)? )|(\(\[(P(d)?,S(m)?)\]\{1,1\}\)#\d* ))?(N(d)?\d*|N(d)?\{\d*,\d*\}) P(o)? (N(d)?\d*|N(d)?\{\d*,\d*\})$')),
+    (INT,re.compile('^(\((S(m)?|P(d)?)\)#\d* |(S(m)? )|(P(d)? )|(\(\[(P(d)?,S(m)?)\]\{1,1\}\)#\d* ))?(N(d)?\d*|N(d)?\{\d*,\d*\})$')), #either Nd, Nd5 or Nd{ or l0 N, N
+    (DATETIME, re.compile('^N(d)?4 P(d)? N(d)?2 P(d)? N(d)?2 (Z(s)?|L(u)?|\[Z(s)?,L(u)?\]\{\d,\d\}) N(d)?2 P(o)? N(d)?2 P(o)? N(d)?2( L(u)?)*$')),
+    (DATE, re.compile('^N(d)?2 P(o)? N(d)?2 P(o)? N(d)?4$')), #1111-11-11
+    (TIME, re.compile('^N(d)?2 P(o)? N(d)?2( P(o)? N(d)?2)?$')) #1111-11-11
 ]
+
 
 class DataTypeDetection(ColumnProfiler):
 
@@ -41,12 +39,13 @@ class DataTypeDetection(ColumnProfiler):
         data_type = UNICODE
         if 'pattern' not in meta:
             ColumnPatternProfiler().profile_column(values, meta)
-        pattern = meta['pattern']
+        pattern = meta['pattern'].strip()
 
         gtypes = set([])
         for ptype in types:
             if pattern is not None:
                 m = ptype[1].match(pattern)
+                #print(ptype,pattern,m)
                 if m:
                     gtypes.add(ptype[0])
         if len(gtypes) != 1:

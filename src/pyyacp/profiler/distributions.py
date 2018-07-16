@@ -23,7 +23,7 @@ class CharacterDistributionProfiler(ColumnProfiler):
 
     def __init__(self):
         super(CharacterDistributionProfiler, self).__init__('cdp', 'c_dist')
-        self.dv = defaultdict(int)
+
 
 
     def result_datatype(self):
@@ -31,6 +31,7 @@ class CharacterDistributionProfiler(ColumnProfiler):
 
     @timer(key="profile.col_char_distr")
     def _profile_column(self, values, meta):
+        self.dv = defaultdict(int)
         if 'data_type' not in meta:
             DataTypeDetection().profile_column(values, meta)
 
@@ -84,13 +85,14 @@ class BenfordsLawDistribution(ColumnProfiler):
 
     def __init__(self):
         super(BenfordsLawDistribution, self).__init__('cdb', 'benford')
-        self.dv = {i:0 for i in range(1,10)}
+
 
     def result_datatype(self):
         return BenfordsLawDistributionResult(None, False, None)
 
     @timer(key="profile.col_benford_distr")
     def _profile_column(self, values, meta):
+        self.dv = {i: 0 for i in range(1, 10)}
 
         if 'data_type' not in meta:
             DataTypeDetection().profile_column(values, meta)

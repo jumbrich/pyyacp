@@ -4,7 +4,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 
 
-from dtpattern.dtpattern1 import translate_all
+
+from dtpattern.unicode_translate.translate import string_to_uc_level2, translate, translate_all, uniq_uc
 from pyyacp.profiler import ColumnProfiler
 from pyjuhelpers.timer import timer
 
@@ -23,13 +24,6 @@ class CharacterSetProfiler(ColumnProfiler):
 
 
     def _analyse_ColumnPattern(self, column,meta):
-        patterns = translate_all(column)
-
-        res=set([])
-        for p in patterns:
-            s=set(p)
-            res.update(s)
-
-        return ''.join(sorted(list(set(res))))
+        return uniq_uc(column,trans_table=string_to_uc_level2, trans_func=translate)
 
 

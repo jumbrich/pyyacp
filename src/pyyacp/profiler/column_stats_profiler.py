@@ -24,8 +24,6 @@ class ColumnStatsProfiler(ColumnProfiler):
 
     def __init__(self):
         super(ColumnStatsProfiler, self).__init__('csp', 'stats')
-        self.vlen = []
-        self.dv = defaultdict(int)
 
     @timer(key="profile.col_stats")
     def _profile_column(self, values, meta)->ColumnStatsProfilerResult:
@@ -35,6 +33,9 @@ class ColumnStatsProfiler(ColumnProfiler):
         :param meta:
         :return: instance of ColumnStatsProfilerResult
         """
+        self.vlen = []
+        self.dv = defaultdict(int)
+
         _vlena= self.vlen.append
         for v in values:
             _v = v.strip()
@@ -60,10 +61,10 @@ class ColumnStatsProfiler(ColumnProfiler):
         stats['max_value'] = max(self.dv) if len(self.dv)>0 else ''
 
 
-        stats['min_len'] = min(an) if len(an)>0 else 0
-        stats['max_len'] = max(an) if len(an)>0 else 0
-        stats['mean_len'] = np.mean(an)
-        stats['median_len'] = np.median(an)
+        stats['min_len'] = int(min(an)) if len(an)>0 else 0
+        stats['max_len'] = int(max(an)) if len(an)>0 else 0
+        stats['mean_len'] = float(np.mean(an))
+        stats['median_len'] = float(np.median(an))
 
         stats['empty']= len(a[a==0])
         stats['distinct']=len(self.dv)
