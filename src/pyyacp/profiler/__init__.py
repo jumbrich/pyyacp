@@ -7,7 +7,17 @@ import inspect
 import structlog
 log = structlog.get_logger()
 
+empty_symbols=[u'NA', u'NAN', u'nan', u'NULL',u'None',u'null']
 
+def is_not_empty(value):
+    return not is_empty(value)
+
+def is_empty(value):
+
+    v=value.strip()
+    if len(v)==0:
+        return True
+    return v in empty_symbols
 
 def isnamedtupleinstance(x):
     t = type(x)
