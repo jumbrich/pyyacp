@@ -7,7 +7,6 @@ import inspect
 import structlog
 log = structlog.get_logger()
 
-from pyyacp.profiler.empty_cell_detection import is_not_empty
 
 
 def isnamedtupleinstance(x):

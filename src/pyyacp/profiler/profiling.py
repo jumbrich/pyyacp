@@ -3,11 +3,11 @@ import inspect
 
 from pyjuhelpers.module_import import import_from_string
 from pyjuhelpers.string_format import reindent
+from pyjuhelpers.timer import timer
 from pyyacp.config import pyyacpconfig
 from pyyacp.datatable import DataTable
 from pyyacp.profiler import Profiler, ColumnProfilerSet, ColumnProfiler, TableProfilerSet, TableProfiler
 
-from pyjuhelpers.timer import timer
 import pandas as pd
 
 TableProfile = collections.namedtuple('TableProfile',['table_metadata','table_profile', 'col_profiles'])

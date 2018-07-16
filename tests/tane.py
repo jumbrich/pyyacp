@@ -7,13 +7,8 @@ Please do not re-distribute without written permission from the author
 Any commerical uses strictly forbidden.
 Code is provided without any guarantees.
 ----------------------------------------------------------------------------------------------"""
-from pandas import *
-import pandas as pd
 from collections import defaultdict
-import numpy as NP
-import sys
 
-from pyyacp.timer import Timer
 
 
 def list_duplicates(seq):
@@ -195,40 +190,40 @@ def computeSingletonPartitions(listofcols):
             if len(element[1]) > 1:  # ignore singleton equivalence classes
                 dictpartitions[a].append(element[1])
 
-
-
-with Timer(verbose=True):
-    cols={'A':[i for i in range(0,100)],
-          'B':[i%2 for i in range(0,100)],
-          'C':[i%3 for i in range(0,100)],
-          'D': [i % 4 for i in range(0, 100)],
-          'E': [i % 2 for i in range(0, 100)]
-          }
-    data2D=pd.DataFrame(cols)
-
-    totaltuples = len(data2D.index)
-    listofcolumns = list(data2D.columns.values) # returns ['A', 'B', 'C', 'D', .....]
-
-    tableT = ['NULL']*totaltuples # this is for the table T used in the function stripped_product
-
-    L0 = []
-    dictCplus = {'NULL': listofcolumns}
-    dictpartitions = {} # maps 'stringslikethis' to a list of lists, each of which contains indices
-    computeSingletonPartitions(listofcolumns)
-    finallistofFDs=[]
-    #print dictCplus['NULL']
-    L1=listofcolumns[:]  # L1 is a copy of listofcolumns
-    l=1
-
-    L = [L0,L1]
-
-    while (not (L[l] == [])):
-        compute_dependencies(L[l],listofcolumns[:])
-        prune(L[l])
-        temp = generate_next_level(L[l])
-        L.append(temp)
-        l=l+1
-
-    print "List of all FDs: " , finallistofFDs
-    print "Total number of FDs found: ", len(finallistofFDs)
-
+#
+#
+# with Timer(verbose=True):
+#     cols={'A':[i for i in range(0,100)],
+#           'B':[i%2 for i in range(0,100)],
+#           'C':[i%3 for i in range(0,100)],
+#           'D': [i % 4 for i in range(0, 100)],
+#           'E': [i % 2 for i in range(0, 100)]
+#           }
+#     data2D=pd.DataFrame(cols)
+#
+#     totaltuples = len(data2D.index)
+#     listofcolumns = list(data2D.columns.values) # returns ['A', 'B', 'C', 'D', .....]
+#
+#     tableT = ['NULL']*totaltuples # this is for the table T used in the function stripped_product
+#
+#     L0 = []
+#     dictCplus = {'NULL': listofcolumns}
+#     dictpartitions = {} # maps 'stringslikethis' to a list of lists, each of which contains indices
+#     computeSingletonPartitions(listofcolumns)
+#     finallistofFDs=[]
+#     #print dictCplus['NULL']
+#     L1=listofcolumns[:]  # L1 is a copy of listofcolumns
+#     l=1
+#
+#     L = [L0,L1]
+#
+#     while (not (L[l] == [])):
+#         compute_dependencies(L[l],listofcolumns[:])
+#         prune(L[l])
+#         temp = generate_next_level(L[l])
+#         L.append(temp)
+#         l=l+1
+#
+#     print "List of all FDs: " , finallistofFDs
+#     print "Total number of FDs found: ", len(finallistofFDs)
+#
